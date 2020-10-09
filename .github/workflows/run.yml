@@ -63,3 +63,18 @@ jobs:
         ${pwd_list[$i]}
         EOF
         done
+        
+        echo $(date) > lastrun.txt
+    - name: Git Commit
+      run: |
+        git add -A .
+        git config --local user.email "$GitEmail"
+        git config --local user.name "$GitName"
+        git commit -am "update"
+      env:
+        GitEmail: ${{ secrets.GitEmail }}
+        GitName: ${{ secrets.GitName }}
+    - name: Git Push
+      uses: ad-m/github-push-action@v0.5.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
